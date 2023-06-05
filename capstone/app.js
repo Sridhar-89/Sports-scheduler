@@ -158,6 +158,15 @@ app.get("/signup", (request, response) => {
       title: "login"
     });
   })
+  app.get("/signout", (request, response, next) => {
+    request.logout((err) => {
+      if (err) {
+        return next(err);
+      }
+      response.redirect("/");
+    });
+  });
+  
   app.get("/admin-dashboard", async(request, response) => {
     console.log("user",request.user.id);
     const allsports=await sport.getall(request.user.id);
