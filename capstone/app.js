@@ -3,7 +3,7 @@ const app = express();
 var csrf = require("tiny-csrf");
 const path = require("path");
 const flash = require("connect-flash");
-const { user } = require("./models");
+const { user,sport } = require("./models");
 var cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 
@@ -16,6 +16,7 @@ const connectEnsureLogin = require("connect-ensure-login");
 const session = require("express-session");
 const LocalStrategy = require("passport-local");
 const bcrypt = require("bcrypt");
+const { syncBuiltinESMExports } = require("module");
 //const { Hash } = require("crypto");
 const saltRounds = 10;
 app.set("view engine", "ejs");
@@ -48,6 +49,13 @@ app.use(
             console.log("password", user.password);
             const result = await bcrypt.compare(password, user.password);
             if (result) {
+                if(user.role=="admin"){
+                    session.role = 'admin'
+                }
+                else{
+                    session.role = 'player'
+                }
+                
               return done(null, user);
             } else {
               return done(null, false, { message: "Invalid password" });
@@ -79,6 +87,8 @@ app.use(
     const firstname = request.body.firstName;
     const mail = request.body.email;
     const pswd = request.body.password;
+    const role1= request.body.role;
+    //console.log("role",role1);
     // if (!firstname) {
     //   request.flash("error", "please enter firstname!. It is mandatory");
     //   return response.redirect("/signup");
@@ -104,13 +114,18 @@ app.use(
         name: request.body.firstName,
         email: request.body.email,
         password: hashedPwd,
-        role:"admin"
+        role:role1,
       });
       request.login(user1, (err) => {
         if (err) {
           console.log(err);
         }
-        response.redirect("/admin-dashboard");
+        if(user1.role=="admin"){
+            response.redirect("/admin-dashboard");
+        }
+        else{
+            response.redirect("/player-dashboard");
+        }
       });
     } catch (error) {
       console.log(error);
@@ -130,13 +145,58 @@ app.get("/signup", (request, response) => {
     }),
     function (request, response) {
       console.log(request.user);
-      response.redirect("/admin-dashboard");
+      if(session.role=="admin"){
+        response.redirect("/admin-dashboard");
+      }
+      else{
+        response.redirect("/player-dashboard");
+      }
     }
   );
   app.get("/login", (request, response) => {
     response.render("login", {
       title: "login"
     });
+  })
+  app.get("/admin-dashboard", async(request, response) => {
+    console.log("user",request.user.id);
+    const allsports=await sport.getall(request.user.id);
+    console.log("sports",allsports)
+    response.render("admin-dashboard",{username:request.user.name,userid:request.user.id,allsports:allsports});
+  })
+
+  app.get("/player-dashboard", async(request, response) => {
+    console.log("user",request.user.id);
+    const allsports=await sport.getallsports();
+    console.log("sports",allsports)
+    response.render("player-dashboard",{username:request.user.name,userid:request.user.id,allsports:allsports});
+  })
+
+  app.get("/newSport", (request, response) => {
+    //console.log("user",request.user.id);
+    response.render("newSport",{userid:request.user.id});
+  })
+  app.post("/newSport/:uid", async(request, response) => {
+    //console.log("user",request.user.id);
+    const sport1= await sport.create({
+        name:request.body.sport,
+        userId:request.params.uid,
+    })
+    response.redirect("/admin-dashboard");
+  })
+  
+  app.get("/sport/:sid", async(request, response) => {
+    console.log("session",session.role);
+    console.log("sport",request.params.sid);
+    const sports1=await sport.getdetails(request.params.sid);
+    console.log("sports",sports1)
+    if(session.role=="admin"){
+        response.render("sport",{userid:request.user.id,sport:sports1});
+    }
+    else{
+        response.render("sportsessions",{userid:request.user.id,sport:sports1});
+
+    }
   })
 
 
