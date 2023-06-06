@@ -1,8 +1,6 @@
-'use strict';
+"use strict";
 const { Op } = require("sequelize");
-const {
-  Model
-} = require('sequelize');
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class slot extends Model {
     /**
@@ -18,13 +16,12 @@ module.exports = (sequelize, DataTypes) => {
       slot.belongsTo(models.user, {
         foreignKey: "userId",
       });
-
     }
-    static async getAll(){
+    static async getAll() {
       return this.findAll();
     }
 
-    static async previous(userId) {
+    static async previous(sportId) {
       // FILL IN HERE TO RETURN OVERDUE ITEMS
 
       const today = new Date();
@@ -33,11 +30,11 @@ module.exports = (sequelize, DataTypes) => {
           time: {
             [Op.lt]: today,
           },
-          userId:userId,
+          sportId: sportId,
         },
       });
     }
-    static async upcoming(userId) {
+    static async upcoming(sportId) {
       // FILL IN HERE TO RETURN ITEMS DUE LATER
       const today = new Date();
       return this.findAll({
@@ -45,21 +42,23 @@ module.exports = (sequelize, DataTypes) => {
           time: {
             [Op.gt]: today,
           },
-          userId:userId,
+          sportId: sportId,
         },
       });
     }
-
   }
-  slot.init({
-    time: DataTypes.DATE,
-    venue: DataTypes.STRING,
-    players: DataTypes.ARRAY(DataTypes.STRING),
-    noofplayers: DataTypes.INTEGER,
-    cancel: DataTypes.BOOLEAN
-  }, {
-    sequelize,
-    modelName: 'slot',
-  });
+  slot.init(
+    {
+      time: DataTypes.DATE,
+      venue: DataTypes.STRING,
+      players: DataTypes.ARRAY(DataTypes.STRING),
+      noofplayers: DataTypes.INTEGER,
+      cancel: DataTypes.BOOLEAN,
+    },
+    {
+      sequelize,
+      modelName: "slot",
+    }
+  );
   return slot;
 };

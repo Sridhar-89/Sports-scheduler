@@ -2,17 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="<%=csrfToken %>" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
 <body>
     <h1>Create a new Sport</h1>
-
+    <div>
+        <% if(messages && messages.error && messages.error.length > 0)  { %>
+            <% for(var i=0; i<messages.error.length; i++) { %>
+                    <li> <%= messages.error[i] %></li>
+            <% } %>
+          <% } %>
+       </div>
     
     <form action="/newSport" method="post">
+        <input type="hidden" name="_csrf" value="<%=csrfToken %>">
         <h1>What is the sport name</h1>
-        <input type="text" name="sport">
+        <input type="text" name="sport" required>
         <button type="submit" value="submit" >submit</button>
     </form>
 </body>

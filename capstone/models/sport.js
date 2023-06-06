@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class sport extends Model {
     /**
@@ -18,31 +16,33 @@ module.exports = (sequelize, DataTypes) => {
       sport.hasMany(models.slot, {
         foreignKey: "sportId",
       });
-
     }
-    static async getall(id){
+    static async getall(id) {
       return this.findAll({
-        where:{
-          userId:id
-        }
-      })
+        where: {
+          userId: id,
+        },
+      });
     }
-    static async getdetails(id){
+    static async getdetails(id) {
       return this.findAll({
-        where:{
-          id:id
-        }
-      })
+        where: {
+          id: id,
+        },
+      });
     }
-    static async getallsports(){
-      return this.findAll()
+    static async getallsports() {
+      return this.findAll();
     }
   }
-  sport.init({
-    name: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'sport',
-  });
+  sport.init(
+    {
+      name: DataTypes.STRING,
+    },
+    {
+      sequelize,
+      modelName: "sport",
+    }
+  );
   return sport;
 };
