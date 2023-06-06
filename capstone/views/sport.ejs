@@ -9,8 +9,26 @@
 <body>
     <h1><%= sport.name %></h1>
     <h1>Sessions</h1>
-    <h1><a href="<%= sport.id %>/newSession">Create session</a></h1>
+    <h1><a href="/sport/<%= sport.id %>/newSession">Create session</a></h1>
+
+    <h1>upcoming sessions</h1>
+    <% for(let i=0;i<upcoming.length;i++){ %>
+
+
+        <h1><a class="text-blue-600" href="/sport/<%= upcoming[i].id %>"><%= upcoming[i].time %> </a>
+            <%= upcoming[i].noofplayers %>  
+        </h1>
+    <% } %>
+
     <h1>previous sessions</h1>
+
+    <% for(let i=0;i<previous.length;i++){ %>
+
+
+        <h1><a class="text-blue-600" href="/sport/<%= previous[i].id %>"><%= previous[i].time %> </a>
+            <%= previous[i].noofplayers %>  
+        </h1>
+    <% } %>
     
 
 </body>
