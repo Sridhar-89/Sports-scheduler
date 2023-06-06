@@ -14,6 +14,12 @@ module.exports = (sequelize, DataTypes) => {
       user.hasMany(models.sport, {
         foreignKey: "userId",
       });
+      user.hasMany(models.slot, {
+        foreignKey: "userId",
+      });
+    }
+    static async getall(){
+      return this.findAll();
     }
   }
   user.init({
