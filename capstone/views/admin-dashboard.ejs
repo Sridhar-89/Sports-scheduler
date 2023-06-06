@@ -5,16 +5,30 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script> 
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.15/tailwind.min.css">
 </head>
 <body>
-    <h1>Welcome <%=username %></h1>
-    <h1>Administrative actions</h1>
-    <a href="newSport">Create a new sport</a>
-    <a href="reports">View reports</a>
-
-    <h1>All sports:</h1>
-    <% for(let i=0;i<allsports.length;i++){ %>
-        <h1><a href="/sport/<%= allsports[i].id %>"><%= allsports[i].name %> </a></h1>
-    <% } %>
+    <div class="grid grid-cols-6">
+    <div class="col-start-3 col-span-2">
+<div class="py-3">
+    <h1 class="text-2xl font-bold text-gray-800 ">Welcome <%=username %></h1>
+</div>
+<div class="py-3">
+    <h1 class="text-2xl font-bold text-gray-800">Administrative actions</h1>
+</div>
+    
+    
+    <a class="text-green-600 px-4" href="newSport">Create a new sport</a>
+    <a class="text-green-600 px-4" href="reports">View reports</a>
+    <a class="text-green-600 px-4" href="signout">signout</a>
+    <div class="py-3">
+        <h1 class="text-2xl font-bold text-gray-800">All sports:</h1>
+        <% for(let i=0;i<allsports.length;i++){ %>
+            <h1><a class="text-blue-600" href="/sport/<%= allsports[i].id %>"><%= allsports[i].name %> </a></h1>
+        <% } %>
+    </div>
+    </div>
+    </div>
 </body>
 </html>
