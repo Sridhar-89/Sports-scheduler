@@ -6,31 +6,56 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script> 
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.15/tailwind.min.css">
 </head>
 <body>
-    <h1><%= sport.name %></h1>
-    <h1>Sessions</h1>
-    <h1><a href="/sport/<%= sport.id %>/newSession">Create session</a></h1>
+    <div class="grid grid-cols-6">
+        <div class="col-start-3 col-span-2">
+            <div class="py-3">
+                <h1 class="text-2xl font-bold text-gray-800" ><%= sport.name %></h1>
+            </div>
+            <div class="py-3">
+                <a class="text-green-600 underline hover:underline-offset-4" href="signout">signout</a>
+            </div>
+            <div class="py-3">
+                <h1 class="text-2xl font-bold text-gray-800" >Sessions</h1>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800" ><a class="text-blue-600 underline hover:underline-offset-4" href="/sport/<%= sport.id %>/newSession">Create session</a></h1>
+            </div>
+            <div class="py-3">
+                <h1 class="text-2xl font-bold text-gray-800" >upcoming sessions</h1>
+                <% for(let i=0;i<upcoming.length;i++){ %>
+            
+            
+                    <h1><a class="text-blue-600" href="/sport/<%= upcoming[i].id %>"><%= upcoming[i].time %> </a>
+                        <%= upcoming[i].noofplayers %>  
+                    </h1>
+                <% } %>
+            </div>
+            <div class="py-3">
+                <h1 class="text-2xl font-bold text-gray-800">previous sessions</h1>
 
-    <h1>upcoming sessions</h1>
-    <% for(let i=0;i<upcoming.length;i++){ %>
-
-
-        <h1><a class="text-blue-600" href="/sport/<%= upcoming[i].id %>"><%= upcoming[i].time %> </a>
-            <%= upcoming[i].noofplayers %>  
-        </h1>
-    <% } %>
-
-    <h1>previous sessions</h1>
-
-    <% for(let i=0;i<previous.length;i++){ %>
-
-
-        <h1><a class="text-blue-600" href="/sport/<%= previous[i].id %>"><%= previous[i].time %> </a>
-            <%= previous[i].noofplayers %>  
-        </h1>
-    <% } %>
+                <% for(let i=0;i<previous.length;i++){ %>
+            
+            
+                    <h1><a class="text-blue-600" href="/sport/<%= previous[i].id %>"><%= previous[i].time %> </a>
+                     <%= previous[i].noofplayers %>  
+                    </h1>
+                <% } %>
+                
+            </div>
+        </div>
+    </div>
+   
     
+    
+    
+
+    
+
+   
 
 </body>
 </html>

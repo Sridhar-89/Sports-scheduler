@@ -6,22 +6,34 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script> 
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.15/tailwind.min.css">
 </head>
 <body>
-    <h1>Create a new Sport</h1>
-    <div>
-        <% if(messages && messages.error && messages.error.length > 0)  { %>
-            <% for(var i=0; i<messages.error.length; i++) { %>
-                    <li> <%= messages.error[i] %></li>
-            <% } %>
-          <% } %>
-       </div>
+    <div class="grid grid-cols-6">
+        <div class="col-start-3 col-span-2">
+            <div class="py-3">
+                <h1 class="text-2xl font-bold text-gray-800">Create a new Sport</h1>
+            </div>
+            <div>
+                <% if(messages && messages.error && messages.error.length > 0)  { %>
+                    <% for(var i=0; i<messages.error.length; i++) { %>
+                        <li> <%= messages.error[i] %></li>
+                        <% } %>
+                        <% } %>
+            </div>
+            <div class="py-3">
+                <form action="/newSport" method="post">
+                    <input type="hidden" name="_csrf" value="<%=csrfToken %>">
+                    <h1 class="text-2xl font-bold text-gray-800">What is the sport name</h1>
+                    <input type="text" name="sport" class="border border-gray-300 text-gray-900 rounded p-2 w-full" required><br><br>
+                    <button type="submit" value="submit" class="text-white bg-green-600 hover:bg-green-600 font-medium rounded px-5 py-2">submit</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
     
-    <form action="/newSport" method="post">
-        <input type="hidden" name="_csrf" value="<%=csrfToken %>">
-        <h1>What is the sport name</h1>
-        <input type="text" name="sport" required>
-        <button type="submit" value="submit" >submit</button>
-    </form>
+   
 </body>
 </html>
