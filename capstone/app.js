@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 const express = require("express");
 const app = express();
 var csrf = require("tiny-csrf");
@@ -16,6 +18,7 @@ const connectEnsureLogin = require("connect-ensure-login");
 const session = require("express-session");
 const LocalStrategy = require("passport-local");
 const bcrypt = require("bcrypt");
+const { log, count } = require("console");
 //const { syncBuiltinESMExports } = require("module");
 //const { Hash } = require("crypto");
 const saltRounds = 10;
@@ -181,6 +184,14 @@ app.get("/signout", (request, response, next) => {
     response.redirect("/");
   });
 });
+// app.get("/homepage", (request, response, next) => {
+//   request.logout((err) => {
+//     if (err) {
+//       return next(err);
+//     }
+//     response.redirect("/");
+//   });
+// });
 
 app.get("/allsports", async function (request, response) {
   try {
@@ -280,6 +291,8 @@ app.get(
       if (request.accepts("html")) {
         response.render("sport", {
           userid: request.user.id,
+          userrole: session.role,
+
           sport: sports1[0],
           sessions: allsessions,
           upcoming: upcoming1,
@@ -299,6 +312,7 @@ app.get(
       if (request.accepts("html")) {
         response.render("sportsessions", {
           userid: request.user.id,
+          userrole: session.role,
           sport: sports1[0],
           sessions: allsessions,
           upcoming: upcoming1,
@@ -358,5 +372,224 @@ app.post(
     response.redirect(`/sport/${request.params.sid}`);
   }
 );
+
+app.get(
+  "/sport/:sid/session/:sessionid",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (req, res) => {
+    console.log("sesion", session.role);
+    const sports1 = await sport.getdetails(req.params.sid);
+    // console.log("sports", sports1);
+    // console.log("sports1", sports1[0].name);
+    const sess = await slot.getdetails(req.params.sessionid);
+    // console.log("session",sess);
+    // console.log("session",sess.id);
+    let joined = false;
+    for (let i = 0; i < sess.players.length; i++) {
+      if (sess.players[i] == req.user.name) {
+        joined = true;
+      }
+    }
+    console.log("userid", req.user);
+    console.log("username", req.user.name);
+    res.render("viewsession", {
+      data: sess,
+      sport: sports1[0],
+      user: req.user,
+      join: joined,
+      role: session.role,
+      csrfToken: req.csrfToken(),
+    });
+  }
+);
+
+app.put(
+  "/sport/:sid/session/:sessionid",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (req, res) => {
+    const sess = await slot.getdetails(req.params.sessionid);
+    const sports1 = await sport.getdetails(req.params.sid);
+    let count = sess.noofplayers;
+    count = count - 1;
+
+    try {
+      let arr = [];
+      for (let i = 0; i < sess.players.length; i++) {
+        arr.push(sess.players[i]);
+      }
+      arr.push(req.user.name);
+      console.log("arr", arr);
+      console.log("count", count);
+      const updateduser = await slot.addplayers(
+        req.params.sessionid,
+        arr,
+        count
+      );
+      return res.json(updateduser);
+    } catch (error) {
+      console.log(error);
+      return res.status(422).json(error);
+    }
+  }
+);
+
+app.put(
+  "/sport/:sid/session/:sessionid/remove",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (req, res) => {
+    const sess = await slot.getdetails(req.params.sessionid);
+    let count = sess.noofplayers;
+    count = count + 1;
+    try {
+      let arr = [];
+      for (let i = 0; i < sess.players.length; i++) {
+        arr.push(sess.players[i]);
+      }
+      //remove players
+      let index = arr.indexOf(req.user.name);
+      if (index !== -1) {
+        arr.splice(index, 1);
+      }
+
+      console.log("arr", arr);
+      console.log("count", count);
+      const updateduser = await slot.addplayers(
+        req.params.sessionid,
+        arr,
+        count
+      );
+      return res.json(updateduser);
+    } catch (error) {
+      console.log(error);
+      return res.status(422).json(error);
+    }
+  }
+);
+app.get(
+  "/sport/:sid/session/edits",
+  connectEnsureLogin.ensureLoggedIn("/login"),
+  async (request, response) => {
+    //const sportid=request.params.sid;
+    const sess = await slot.getdetails(req.params.sessionid);
+    try {
+      const sport1 = await sport.findByPk(sess);
+      if (!sport1) {
+        request.flash("error", "Session not found");
+        return response.redirect("/admin-dashboard");
+      }
+
+      response.render("edit-session", {
+        time: request.body.dateandtime,
+        venue: request.body.location,
+        players: array,
+        noofplayers: request.body.noofplayers,
+        userId: request.user.id,
+        sportId: request.params.sid,
+        csrfToken: request.csrfToken(),
+      });
+    } catch (error) {
+      request.flash("error", "Please try again");
+      response.redirect("/admin-dashboard");
+    }
+  }
+);
+app.post(
+  "/sport/:sid/session/edits",
+  connectEnsureLogin.ensureLoggedIn("/login"),
+  async (req, res) => {
+    if (req.user.role == "admin") {
+      const sess = req.params.session.id;
+      const { name } = req.body;
+      try {
+        const sport1 = await sport.findByPk(sess);
+        if (!sport1) {
+          req.flash("error", "Sport not found.");
+          return res.redirect("/admin-dashboard");
+        }
+        sport1.name = name;
+        await sport1.save();
+        req.flash("success", "Sport updated successfully!");
+        res.redirect(`/session/${sess}`);
+      } catch (error) {
+        console.log(error);
+        req.flash("error", "An error occurred. Please try again.");
+        res.redirect(`/session/${sess}`);
+      }
+    } else {
+      res.json({ error: "Unauthorise action" });
+    }
+  }
+);
+
+app.get(
+  "/newSport/:sid/edit",
+  connectEnsureLogin.ensureLoggedIn("/login"),
+  async (request, response) => {
+    const sportid = request.params.sid;
+    try {
+      const sport1 = await sport.findByPk(sportid);
+      if (!sport1) {
+        request.flash("error", "Sport not found");
+        return response.redirect("/admin-dashboard");
+      }
+
+      response.render("edit-sport", {
+        title: "Edit text",
+        sid: sport1.id,
+        sport: sport1,
+        csrfToken: request.csrfToken(),
+      });
+    } catch (error) {
+      request.flash("error", "Please try again");
+      response.redirect("/admin-dashboard");
+    }
+  }
+);
+app.post(
+  "/newSport/:sid/edit",
+  connectEnsureLogin.ensureLoggedIn("/login"),
+  async (req, res) => {
+    if (req.user.role == "admin") {
+      const sportId = req.params.sid;
+      const { name } = req.body;
+      try {
+        const sport1 = await sport.findByPk(sportId);
+        if (!sport1) {
+          req.flash("error", "Sport not found.");
+          return res.redirect("/sport");
+        }
+        sport1.name = name;
+        await sport1.save();
+        req.flash("success", "Sport updated successfully!");
+        res.redirect(`/sport/${sportId}`);
+      } catch (error) {
+        console.log(error);
+        req.flash("error", "An error occurred. Please try again.");
+        res.redirect(`/sport/${sportId}`);
+      }
+    } else {
+      res.json({ error: "Unauthorise action" });
+    }
+  }
+);
+app.get(
+  "/newSport/:id/delete",
+  connectEnsureLogin.ensureLoggedIn("/login"),
+  async (req, res) => {
+    if (req.user.role == "admin") {
+      try {
+        await slot.DeleteSport1(req.params.id);
+        await sport.DeleteSport(req.params.id);
+        res.redirect("/admin-dashboard");
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      res.json({ error: "Unauthorise action" });
+    }
+  }
+);
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
 
 module.exports = app;
