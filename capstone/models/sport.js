@@ -34,6 +34,13 @@ module.exports = (sequelize, DataTypes) => {
     static async getallsports() {
       return this.findAll();
     }
+    static async DeleteSport(sportId) {
+      return this.destroy({
+        where: {
+          id: sportId,
+        },
+      });
+    }
   }
   sport.init(
     {
