@@ -20,6 +20,39 @@ module.exports = (sequelize, DataTypes) => {
     static async getAll() {
       return this.findAll();
     }
+    static async getdetails(sid) {
+      return this.findOne({
+        where: {
+          id: sid,
+        },
+      });
+    }
+    static async addplayers(id, ar, count) {
+      return this.update(
+        {
+          players: ar,
+          noofplayers: count,
+        },
+        {
+          where: {
+            id: id,
+          },
+        }
+      );
+    }
+    static async removeplayers(id, ar, count) {
+      return this.update(
+        {
+          players: ar,
+          noofplayers: count,
+        },
+        {
+          where: {
+            id: id,
+          },
+        }
+      );
+    }
 
     static async previous(sportId) {
       // FILL IN HERE TO RETURN OVERDUE ITEMS
@@ -42,6 +75,13 @@ module.exports = (sequelize, DataTypes) => {
           time: {
             [Op.gt]: today,
           },
+          sportId: sportId,
+        },
+      });
+    }
+    static async DeleteSport1(sportId) {
+      return this.destroy({
+        where: {
           sportId: sportId,
         },
       });
