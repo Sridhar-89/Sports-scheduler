@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="<%=csrfToken %>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="py-3">
+                
+        <a class="text-green-600 underline hover:underline-offset-4 px-2" href="/signout">Home-Page</a>
+        <a class="text-green-600 underline hover:underline-offset-4" href="/admin-dashboard">admin-dashboard</a>
+        <a class="text-green-600 underline hover:underline-offset-4" href="/player-dashboard">player-dashboard</a>
+        </div> 
+
+    <script>
+      
+        var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        
+        function adduser(id,sid,sessionid) {
+          
+          fetch(`/sport/${sid}/session/${sessionid}`, {
+            method: 'put',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                id:id,
+              "_csrf": token,
+         
+          
+        })
+          }).then((res) => {
+            if(res.ok)
+            {
+              window.location.reload();
+            }
+          
+          }).catch(err => console.error(err))
+        }
+
+        function removeuser(id,sid,sessionid) {
+          
+          fetch(`/sport/${sid}/session/${sessionid}/remove`, {
+            method: 'put',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                id:id,
+              "_csrf": token,
+         
+          
+        })
+          }).then((res) => {
+            if(res.ok)
+            {
+              window.location.reload();
+            }
+          
+          }).catch(err => console.error(err))
+        }
+        </script>
+    <h1><%=sport.name %> Session  #<%=data.id %></h1>
+    <h1>This session is scheduled for <%=data.time%></h1>
+    <h1>Players</h1>
+    <% for(let i=0;i<data.players.length;i++){  %>
+        <h1><%= data.players[i] %></h1>
+   <% }  %>
+   <% if(role=="player"){ %>
+    <% if(!join && data.noofplayers>0){ %>
+        <button onclick="adduser(<%= user.id %>,<%=sport.id %>,<%=data.id %> )">Join the session</button>
+    <% } else if(join){ %>
+        <button onclick="removeuser(<%= user.id %>,<%=sport.id %>,<%=data.id %> )">Remove from session</button>
+    <% } else if(!join && data.noofplayers==0) { %>
+        <h1>All Slots Filled</h1>
+    <% } %>
+<% } else { %>
+  <div>
+    <a href="/sport/session/<%= slot.id %>/edits" class="hover:underline">Edit Sport</a>
+</div>
+    <button>
+        Cancel session
+    </button>
+<% } %>
+
+
+
+        
+
+
+  
+
+    
+</body>
+</html>
