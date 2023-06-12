@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="../css/styles.css" rel="stylesheet">
+    <title><%= title %></title>
+</head>
+<body class="bg-green-100">
+    <div class="grid grid-cols-4">
+        <div class="col-start-2 col-span-2">
+            <h2>Edit Sport</h2>
+                    
+            <form method="POST" action="/newSport/<%= sid %>/edit">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <div>
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" value="<%= sport.name %>" required>
+                </div>
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

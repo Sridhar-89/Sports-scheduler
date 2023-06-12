@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="../css/styles.css" rel="stylesheet">
+    <title><%= title %></title>
+</head>
+<body class="bg-green-100">
+    <div class="grid grid-cols-4">
+        <div class="col-start-2 col-span-2">
+            <h2>Edit Sport</h2>
+                    
+            <form method="POST" action="/sport/<%= sid %>/session/edits">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <div class="py-3">
+                    <label for="date and time">When will this sport session be held?</label>
+                    <input type="datetime-local" name="dateandtime" class="border border-gray-300 text-gray-900 rounded p-2 w-full" required>
+                </div>
+                <div class="py-3">
+                    <label for="location">Where will this session be played ?</label>
+                    <input type="text" name="location" class="border border-gray-300 text-gray-900 rounded p-2 w-full" required>
+                </div>
+                <div class="py-3">
+                    <label for="players">Who all will be joining you in this session?(comma-separated)</label>
+                    <input type="text" name="players" class="border border-gray-300 text-gray-900 rounded p-2 w-full">
+                </div>
+                <div class="py-3">
+                    <label for="no of players">How many more players do you need ?</label>
+                   
+                    <input type="number" name="noofplayers" class="border border-gray-300 text-gray-900 rounded p-2 w-full" required>
+            
+
+                </div>
+                <div class="py-3">
+                    <button type="submit" class="text-white bg-green-600 hover:bg-green-600 font-medium rounded px-5 py-2">submit</button>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</body>
+</html>
