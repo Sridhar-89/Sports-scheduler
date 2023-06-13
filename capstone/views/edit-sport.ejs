@@ -8,16 +8,15 @@
     <link href="../css/styles.css" rel="stylesheet">
     <title><%= title %></title>
 </head>
-<body class="bg-green-100">
-    <div class="grid grid-cols-4">
-        <div class="col-start-2 col-span-2">
-            <h2>Edit Sport</h2>
-                    
+<body>
+    <div class="grid grid-cols-6">
+        <div class="col-start-3 col-span-2">
+            <h2>Edit Sport</h2>      
             <form method="POST" action="/newSport/<%= sid %>/edit">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <div>
                     <label for="name">Name:</label>
-                    <input type="text" id="name" name="name" value="<%= sport.name %>" required>
+                    <input type="text" id="name" name="name" value="<%= sport.name %>"class="border border-gray-300 text-gray-900 rounded p-2 w-full" required>
                 </div>
                 <button type="submit">Save Changes</button>
             </form>
