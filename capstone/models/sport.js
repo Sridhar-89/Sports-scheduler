@@ -17,12 +17,8 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "sportId",
       });
     }
-    static async getall(id) {
-      return this.findAll({
-        where: {
-          userId: id,
-        },
-      });
+    static async getall() {
+      return this.findAll();
     }
     static async getdetails(id) {
       return this.findAll({

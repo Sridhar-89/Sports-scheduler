@@ -29,7 +29,7 @@
                 <h1 class="text-xl font-bold text-gray-800">upcoming sessions</h1>
                 <% for(let i=0;i<upcoming.length;i++){ %>
                     <a class="text-blue-600 " href="/sport/<%=sport.id%>/session/<%= upcoming[i].id %>"><%= upcoming[i].time %> </a>
-                    <%= upcoming[i].noofplayers %>  
+                    <%= upcoming[i].noofplayers %> <br> 
                     <% } %>
             </div>
             <div class="py-3">

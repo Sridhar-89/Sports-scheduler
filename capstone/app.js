@@ -25,6 +25,7 @@ const saltRounds = 10;
 app.set("view engine", "ejs");
 app.use(flash());
 app.set("views", path.join(__dirname, "views"));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
   session({
@@ -284,8 +285,8 @@ app.get(
     console.log("all", allsessions);
     const previous1 = await slot.previous(request.params.sid);
     const upcoming1 = await slot.upcoming(request.params.sid);
-    console.log("upcoming is", upcoming1);
-    console.log("previous is", previous1);
+    //console.log("upcoming is", upcoming1);
+    //console.log("previous is", previous1);
 
     if (session.role == "admin") {
       if (request.accepts("html")) {
@@ -390,6 +391,12 @@ app.get(
         joined = true;
       }
     }
+    let condition = false;
+    if (sess.userId == req.user.id) {
+      condition = true;
+      console.log("session is of admion", sess.userId);
+      console.log("userid is", req.user.id);
+    }
     console.log("userid", req.user);
     console.log("username", req.user.name);
     res.render("viewsession", {
@@ -398,6 +405,7 @@ app.get(
       user: req.user,
       join: joined,
       role: session.role,
+      st: condition,
       csrfToken: req.csrfToken(),
     });
   }
@@ -466,57 +474,74 @@ app.put(
   }
 );
 app.get(
-  "/sport/:sid/session/edits",
+  "/session/:sid/edits",
   connectEnsureLogin.ensureLoggedIn("/login"),
   async (request, response) => {
+    console.log("true1");
     //const sportid=request.params.sid;
-    const sess = await slot.getdetails(req.params.sessionid);
-    try {
-      const sport1 = await sport.findByPk(sess);
-      if (!sport1) {
-        request.flash("error", "Session not found");
-        return response.redirect("/admin-dashboard");
-      }
+    const sess = request.params.sid;
+    const time = await slot.getdetails(sess);
+    console.log("session of session", sess);
+    console.log("time is ", time);
+    console.log("time is ", time.id);
+    console.log("slot details arer", time.venue);
+    // console.log("slot details arer",time[slot]);
 
-      response.render("edit-session", {
-        time: request.body.dateandtime,
-        venue: request.body.location,
-        players: array,
-        noofplayers: request.body.noofplayers,
-        userId: request.user.id,
-        sportId: request.params.sid,
-        csrfToken: request.csrfToken(),
-      });
-    } catch (error) {
-      request.flash("error", "Please try again");
-      response.redirect("/admin-dashboard");
-    }
+    //console.log("sport is",)
+
+    // if (!sport1) {
+    //   //request.flash("error", "Session not found");
+    //   //return response.redirect("/admin-dashboard");
+    // }
+
+    response.render("edit-session", {
+      time: time.time,
+      venue: time.venue,
+      players: time.players,
+      noofplayers: time.noofplayers,
+      userId: request.user.id,
+      sid: request.params.sid,
+      csrfToken: request.csrfToken(),
+    });
   }
 );
 app.post(
-  "/sport/:sid/session/edits",
+  "/session/:sid/edits",
   connectEnsureLogin.ensureLoggedIn("/login"),
   async (req, res) => {
+    console.log("session is");
     if (req.user.role == "admin") {
-      const sess = req.params.session.id;
-      const { name } = req.body;
-      try {
-        const sport1 = await sport.findByPk(sess);
-        if (!sport1) {
-          req.flash("error", "Sport not found.");
-          return res.redirect("/admin-dashboard");
-        }
-        sport1.name = name;
-        await sport1.save();
-        req.flash("success", "Sport updated successfully!");
-        res.redirect(`/session/${sess}`);
-      } catch (error) {
-        console.log(error);
-        req.flash("error", "An error occurred. Please try again.");
-        res.redirect(`/session/${sess}`);
-      }
-    } else {
-      res.json({ error: "Unauthorise action" });
+      console.log("id3", req.params.sid);
+      sportSession = await slot.getdetails(req.params.sid);
+
+      console.log("session id is", sportSession);
+      const idd = sportSession.sportId;
+
+      // // const { time} = req.body;
+      // const updatedsession = await slot.updatesession({
+      //  sid:req.body.sid,
+      //  time:req.body.time,
+      //  venue:req.body.venue,
+      //  players:req.body.players,
+      //  noofplayers:req.body.noofplayers
+      // }
+      // );
+      const array = req.body.players.split(",");
+      sportSession.time = req.body.time;
+      sportSession.venue = req.body.venue;
+
+      // const array = play.split(",");
+      sportSession.players = array;
+      sportSession.noofplayers = req.body.noofplayers;
+
+      await sportSession.save();
+
+      // console.log("uodate",updatedsession)
+      // return res.json(updatedsession);
+      //sportSession.players=req.body.players,
+      //sportSession.nofplayers=req.body.noofplayers,
+      req.flash("success", "Sport updated successfully!");
+      res.redirect(`/sport/${idd}`);
     }
   }
 );
@@ -573,6 +598,65 @@ app.post(
   }
 );
 app.get(
+  "/report",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    //console.log("user",request.user.id);
+    const reportdetails = await slot.getAll();
+    const sportdetails = await sport.getall();
+    console.log("reports details are :", reportdetails);
+    console.log("report name is", reportdetails[0].venue);
+    console.log("sports details are:", sportdetails);
+    console.log("sport name is", sportdetails[0].name);
+    response.render("report", {
+      sport: sportdetails,
+      slot: reportdetails,
+      csrfToken: request.csrfToken(),
+    });
+  }
+);
+app.get(
+  "/session/:sid/:player",
+  connectEnsureLogin.ensureLoggedIn("/login"),
+  async (req, res) => {
+    console.log("call");
+
+    const sportSession = await slot.getdetails(req.params.sid);
+    if (sportSession.userId == req.user.id) {
+      //console.log("called")
+      //let sportSession =await slot.getDetailsBySportId(req.params.sid);
+      // console.log("session id is",sportSession.id);
+      //const array = play.split(",");
+      try {
+        let arr = [];
+        for (let i = 0; i < sportSession.players.length; i++) {
+          arr.push(sportSession.players[i]);
+        }
+        console.log("array is ", arr);
+
+        let index = arr.indexOf(req.params.player);
+        console.log("players id is", req.params.player);
+        console.log("players are", index);
+        if (index !== -1) {
+          arr.splice(index, 1);
+        }
+        console.log("after arr", arr);
+        await slot.removeplayers(
+          sportSession.id,
+          arr,
+          sportSession.noofplayers + 1
+        );
+        res.redirect(
+          `/sport/${sportSession.sportId}/session/${sportSession.id}`
+        );
+      } catch (error) {
+        console.log(error);
+        return res.status(422).json(error);
+      }
+    }
+  }
+);
+app.get(
   "/newSport/:id/delete",
   connectEnsureLogin.ensureLoggedIn("/login"),
   async (req, res) => {
@@ -580,6 +664,27 @@ app.get(
       try {
         await slot.DeleteSport1(req.params.id);
         await sport.DeleteSport(req.params.id);
+        res.redirect("/admin-dashboard");
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      res.json({ error: "Unauthorise action" });
+    }
+  }
+);
+
+app.get(
+  "/session/:sid/delete1/delete",
+  connectEnsureLogin.ensureLoggedIn("/login"),
+  async (req, res) => {
+    console.log("deleted id is", req.params.sid);
+    if (req.user.role == "admin") {
+      try {
+        const deleted = await slot.DeleteSport1(req.params.sid);
+        console.log("deleted session is", deleted);
+
+        // await sport.DeleteSport(req.params.id);
         res.redirect("/admin-dashboard");
       } catch (error) {
         console.log(error);

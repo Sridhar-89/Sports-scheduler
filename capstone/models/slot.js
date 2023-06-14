@@ -27,6 +27,21 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
     }
+    static async updatesession(sid, venue, time, players, noofplayers) {
+      return this.update(
+        {
+          time: time,
+          venue: venue,
+          players: players,
+          noofplayers: noofplayers,
+        },
+        {
+          where: {
+            id: sid,
+          },
+        }
+      );
+    }
     static async addplayers(id, ar, count) {
       return this.update(
         {
@@ -80,11 +95,16 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
     static async DeleteSport1(sportId) {
-      return this.destroy({
-        where: {
-          sportId: sportId,
+      return this.update(
+        {
+          cancel: true,
         },
-      });
+        {
+          where: {
+            id: sportId,
+          },
+        }
+      );
     }
   }
   slot.init(

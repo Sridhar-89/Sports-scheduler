@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script> 
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.15/tailwind.min.css">
+</head>
+<body>
+    
+<div class="relative overflow-x-auto">
+    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    SPORT NAME
+                <th scope="col" class="px-6 py-3">
+                    SESSIONS time
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    SESSIONS venue
+                </th>
+                
+                <th scope="col" class="px-6 py-3">
+                    CANCELLED
+                </th>
+                
+            </tr>
+        </thead>
+        <tbody>
+         
+                <% for(let i=0;i<slot.length;i++){ %>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                
+                    <td class="px-6 py-4">
+                        <%=slot[i].id %>
+                    </td>
+                    <td class="px-6 py-4">
+                        <%=slot[i].time %>
+                    </td>
+                    <td class="px-6 py-4">
+                        <%=slot[i].venue %>
+                    </td>
+                    <td class="px-6 py-4">
+                        <%=slot[i].cancel %>
+                    </td>
+                </tr>
+               <% } %>
+           
+            
+        </tbody>
+    </table>
+</div>
+
+    
+</body>
+</html>

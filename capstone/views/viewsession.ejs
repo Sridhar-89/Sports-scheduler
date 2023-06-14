@@ -6,10 +6,23 @@
     <meta name="csrf-token" content="<%=csrfToken %>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.15/tailwind.min.css">
+    <link rel="stylesheet" href="myProjects/webProject/icofont/css/icofont.min.css">
+    <style>
+      img{
+        width:10%;
+      }
+      .flex-container {
+  display: flex;
+}
+
+    </style>
 </head>
 <body>
-    <div class="py-3">
-                
+  <div class="grid grid-cols-6">
+    <div class="col-start-3 col-span-2">
+    <div class="py-3">            
         <a class="text-green-600 underline hover:underline-offset-4 px-2" href="/signout">Home-Page</a>
         <a class="text-green-600 underline hover:underline-offset-4" href="/admin-dashboard">admin-dashboard</a>
         <a class="text-green-600 underline hover:underline-offset-4" href="/player-dashboard">player-dashboard</a>
@@ -20,7 +33,7 @@
         var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         
         function adduser(id,sid,sessionid) {
-          
+          console.log("1ddd")
           fetch(`/sport/${sid}/session/${sessionid}`, {
             method: 'put',
             headers: { 'Content-Type': 'application/json' },
@@ -38,9 +51,10 @@
           
           }).catch(err => console.error(err))
         }
+        
 
         function removeuser(id,sid,sessionid) {
-          
+          console.log("2ddd")
           fetch(`/sport/${sid}/session/${sessionid}/remove`, {
             method: 'put',
             headers: { 'Content-Type': 'application/json' },
@@ -58,29 +72,69 @@
           
           }).catch(err => console.error(err))
         }
+        function deleteTodo(id,player){
+          console.log("3ddd")
+        fetch(`/session/${id}/${player}`,{
+          method:"delete",
+          headers: {"Content-Type":"application/json"},
+          body:JSON.stringify({
+            id:id,
+              "_csrf":token
+            })
+
+        })
+        .then((res) =>{
+          if(res.ok)
+            {
+              window.location.reload();
+            }
+        })
+        .catch((err) => console.error(err));
+       }
         </script>
-    <h1><%=sport.name %> Session  #<%=data.id %></h1>
-    <h1>This session is scheduled for <%=data.time%></h1>
-    <h1>Players</h1>
+    <h1 class="text-xl font-bold text-gray-800"><%=sport.name %> Session  #<%=data.id %></h1>
+    <h1 class="text-xl font-bold text-blue-800">This session is scheduled for <%=data.time%></h1>
+    <h1 class="text-xl font-bold text-gray-800">Players</h1>
     <% for(let i=0;i<data.players.length;i++){  %>
-        <h1><%= data.players[i] %></h1>
+      <div  class="flex-container py-2">
+        <div>
+          <button class="text-white bg-green-400 hover:bg-green-600 font-medium rounded px-5 py-2"><%= data.players[i] %></button>
+        </div>
+        
+        <% if(st==true) { %>
+        <div>
+          <a class="text-green-600 underline hover:underline px-2 py-2" href="/session/<%=data.id%>/<%= data.players[i] %>">Remove this player</a><br>
+         
+        </div>
+        <% } %>
+
+      </div>
+        
+        
+        
+        
    <% }  %>
    <% if(role=="player"){ %>
     <% if(!join && data.noofplayers>0){ %>
         <button onclick="adduser(<%= user.id %>,<%=sport.id %>,<%=data.id %> )">Join the session</button>
     <% } else if(join){ %>
-        <button onclick="removeuser(<%= user.id %>,<%=sport.id %>,<%=data.id %> )">Remove from session</button>
+        <button onclick="removeuser(<%= user.id %>,<%=sport.id %>,<%=data.id %> )">Leave from session</button>
     <% } else if(!join && data.noofplayers==0) { %>
         <h1>All Slots Filled</h1>
     <% } %>
 <% } else { %>
+  <% if(st==true) { %>
   <div>
-    <a href="/sport/session/<%= slot.id %>/edits" class="hover:underline">Edit Sport</a>
+    <a class="text-green-600 underline hover:underline" href="/session/<%=data.id%>/edits" class="hover:underline">Edit Session</a>
 </div>
-    <button>
-        Cancel session
-    </button>
+<div>
+  <a class="text-green-600 underline hover:underline" href="/session/<%=data.id%>/delete1/delete" class="hover:underline">Cancel Session</a>
+</div>
 <% } %>
+    
+<% } %>
+    </div>
+  </div>
         
 
 
