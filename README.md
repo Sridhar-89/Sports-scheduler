@@ -8,7 +8,9 @@ The players can create session and join session and leave the session and delete
 The Admin view reports about sports and sessions and the status of the session.
 
 Application Deploy link:- https://sports-scheduler-fsg4.onrender.com
-video demo loop link:- 
+
+
+video demo loop link:- https://www.loom.com/share/bae0e456f5d94611b36442fbcba3156a
 
 
 
