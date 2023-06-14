@@ -22,6 +22,4 @@ video demo loop link:- https://www.loom.com/share/bae0e456f5d94611b36442fbcba315
 ![4](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/b3407440-ecc3-49f1-86f7-6dcc6f020ef2)![5](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/74563dd2-c491-44c3-a29b-21220d584f65)
 
 ![Screenshot 2023-06-14 220546](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/942daa50-0368-49e0-8b3d-dd938288f05c)
-![Screenshot 2023-06-14 220554](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/78be1cdc-5b9d-4171-9521-f4907461ac1e)
-![Screenshot 2023-06-14 220618](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/65c59a97-6f83-45ad-ba9d-1b8bd20![Screenshot 2023-06-14 220626](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/93fffde8-231a-4cf5-93d8-cd45ef7009f6)
-b051c)
+
