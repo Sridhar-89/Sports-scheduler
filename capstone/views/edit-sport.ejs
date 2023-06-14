@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="../css/styles.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script> 
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.15/tailwind.min.css">
     <title><%= title %></title>
 </head>
 <body>
@@ -18,7 +18,7 @@
                     <label for="name">Name:</label>
                     <input type="text" id="name" name="name" value="<%= sport.name %>"class="border border-gray-300 text-gray-900 rounded p-2 w-full" required>
                 </div>
-                <button type="submit">Save Changes</button>
+                <button type="submit" class="text-white bg-green-600 hover:bg-green-600 font-medium rounded px-5 py-2">Save Changes</button>
             </form>
         </div>
     </div>
