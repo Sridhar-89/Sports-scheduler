@@ -662,7 +662,7 @@ app.get(
   async (req, res) => {
     if (req.user.role == "admin") {
       try {
-        await slot.DeleteSport1(req.params.id);
+        await slot.DeleteSport2(req.params.id);
         await sport.DeleteSport(req.params.id);
         res.redirect("/admin-dashboard");
       } catch (error) {

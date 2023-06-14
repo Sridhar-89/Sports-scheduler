@@ -94,6 +94,14 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
     }
+    static async DeleteSport2(sportId) {
+      return this.destroy({
+        where: {
+          sportId: sportId,
+        },
+      });
+    }
+
     static async DeleteSport1(sportId) {
       return this.update(
         {
