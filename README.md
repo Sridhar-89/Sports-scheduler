@@ -14,14 +14,14 @@ video demo loop link:- https://www.loom.com/share/bae0e456f5d94611b36442fbcba315
 
 
 
-![1](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/4e25749c-1050-4cd3-aebe-15cb6a5c8730)
-![2](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/5a873c31-4592-4d3d-a148-1dc7740d3c59)
-![3](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/6c096061-2fff-4e86-9d84-94d96f4da9d7)
-![4](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/6cbeb43b-07be-4191-9e28-5d4e3c003dc6)
-![5](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/755c1cc7-f4cc-4c76-88cb-0637a722efe0)
-![Screenshot 2023-06-14 220546](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/26dbc1a9-01ad-4363-97fa-0c8197358e94)
-![Screenshot 2023-06-14 220554](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/0f0fc720-f6e5-497f-9e95-0b2d35feb7c7)
-![Screenshot 2023-06-14 220618](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/bdc56990-0c87-452b-ba4b-091e5f0d387e)
-![Screenshot 2023-06-14 220626](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/28fb7068-c795-4495-a2f6-4a1830640ab5)
 
 
+![1](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/615baaaf-580f-4fb4-ae88-076ed215a3e2)
+![2](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/06fde772-1182-455e-afe7-258d9549d267)
+![3](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/648ebf1d-f684-4d24-8031-e0a16cc6689a)
+![4](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/b3407440-ecc3-49f1-86f7-6dcc6f020ef2)![5](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/74563dd2-c491-44c3-a29b-21220d584f65)
+
+![Screenshot 2023-06-14 220546](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/942daa50-0368-49e0-8b3d-dd938288f05c)
+![Screenshot 2023-06-14 220554](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/78be1cdc-5b9d-4171-9521-f4907461ac1e)
+![Screenshot 2023-06-14 220618](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/65c59a97-6f83-45ad-ba9d-1b8bd20![Screenshot 2023-06-14 220626](https://github.com/Sridhar-89/Sports-scheduler/assets/109356015/93fffde8-231a-4cf5-93d8-cd45ef7009f6)
+b051c)
