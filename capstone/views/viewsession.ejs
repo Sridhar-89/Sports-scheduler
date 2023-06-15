@@ -130,7 +130,24 @@
 <div>
   <a class="text-green-600 underline hover:underline" href="/session/<%=data.id%>/delete1/delete" class="hover:underline">Cancel Session</a>
 </div>
+<% if(!join && data.noofplayers>0){ %>
+  <button onclick="adduser(<%= user.id %>,<%=sport.id %>,<%=data.id %> )">Join the session</button>
+<% } else if(join){ %>
+  <button onclick="removeuser(<%= user.id %>,<%=sport.id %>,<%=data.id %> )">Leave from session</button>
+<% } else if(!join && data.noofplayers==0) { %>
+  <h1>All Slots Filled</h1>
 <% } %>
+
+<% } else {%>
+  <% if(!join && data.noofplayers>0){ %>
+    <button onclick="adduser(<%= user.id %>,<%=sport.id %>,<%=data.id %> )">Join the session</button>
+  <% } else if(join){ %>
+    <button onclick="removeuser(<%= user.id %>,<%=sport.id %>,<%=data.id %> )">Leave from session</button>
+  <% } else if(!join && data.noofplayers==0) { %>
+    <h1>All Slots Filled</h1>
+  <% } %>
+
+<%}%>
     
 <% } %>
     </div>
