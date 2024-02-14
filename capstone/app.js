@@ -604,10 +604,7 @@ app.get(
     //console.log("user",request.user.id);
     const reportdetails = await slot.getAll();
     const sportdetails = await sport.getall();
-    console.log("reports details are :", reportdetails);
-    console.log("report name is", reportdetails[0].venue);
-    console.log("sports details are:", sportdetails);
-    console.log("sport name is", sportdetails[0].name);
+
     response.render("report", {
       sport: sportdetails,
       slot: reportdetails,
