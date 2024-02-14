@@ -45,7 +45,7 @@ jobs:
       - name: Run the app
         id: run-app
         run: |
-          cd l10
+          cd capstone
           npm install
           npx sequelize-cli db:drop
           npx sequelize-cli db:create
