@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: '20'
       - name: Installing dependencies  
-        run: cd .. && cd capstone && npm ci   #perform clean installation of all dependencies
+        run: cd capstone && npm ci   #perform clean installation of all dependencies
       - name: Code linting and formatting
         run: npx lint-staged
         
