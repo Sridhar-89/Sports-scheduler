@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest  # Containers must run in Linux based operating systems
     steps:
       - name: Checkout repository 
-        uses: actions/checkout@v4    # Downloads a copy of the code in your repository 
+        uses: actions/checkout@v3    # Downloads a copy of the code in your repository 
       - name: Install Node.js
-        uses: actions/setup-node@v3  
+        uses: actions/setup-node@v2  
         with:
           node-version: '20'
       - name: Installing dependencies  
@@ -41,7 +41,7 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
         
       - name: Install dependencies
