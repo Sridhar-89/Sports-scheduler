@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest  # Containers must run in Linux based operating systems
     steps:
       - name: Checkout repository 
-        uses: actions/checkout@v2    # Downloads a copy of the code in your repository 
+        uses: actions/checkout@v3    # Downloads a copy of the code in your repository 
       - name: Install Node.js
         uses: actions/setup-node@v2  
         with:
           node-version: '14'
       - name: Installing dependencies  
-        run: cd Sports-scheduler && cd capstone && npm ci   #perform clean installation of all dependencies
+        run: cd capstone && npm ci   #perform clean installation of all dependencies
       - name: Code linting and formatting
         run: npx lint-staged
         
@@ -43,9 +43,9 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
 
-
+        
       - name: Install dependencies
-        run: cd Sports-scheduler && cd capstone && npm ci
+        run: cd capstone && npm ci
       - name: Run tests
         run: cd capstone && npm test  
       - name: Run the app
