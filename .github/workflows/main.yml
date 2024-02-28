@@ -76,7 +76,7 @@ jobs:
 
 
   codevalidation-notifications:
-    name: Code validation Notification   # after the "validations" executed,  a notification  step will execute
+    name: Code validation Notification   # after the "code-validations" executed,  a notification  step will execute
     needs: code-validation 
     runs-on: ubuntu-latest
     if: ${{ always() }}
@@ -85,7 +85,7 @@ jobs:
         env:
           DISCORD_WEBHOOKURL: ${{ secrets.DISCORD_WEBHOOKURL }}
         run: |
-          if [[ ${{ needs.validation.result }} == 'success' ]]; then
+          if [[ ${{ needs.code-validation.result }} == 'success' ]]; then
             curl -X POST -H 'Content-type: application/json' --data '{"content":" *Code validation* completed   \nCheck the logs for details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' $DISCORD_WEBHOOKURL
           else
             curl -X POST -H 'Content-type: application/json' --data '{"content":" *Code validation* failed. \nCheck the logs for details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' $DISCORD_WEBHOOKURL
@@ -104,7 +104,7 @@ jobs:
         env:
           DISCORD_WEBHOOKURL: ${{ secrets.DISCORD_WEBHOOKURL }}
         run: |
-          if [[ ${{ needs.build_and_run_tests.result }} == 'success' ]]; then
+          if [[ ${{ needs.run_unit_tests.result }} == 'success' ]]; then
             curl -X POST -H 'Content-type: application/json' --data '{"content":" *Test cases* passed successfully. \nCheck the logs for details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' $DISCORD_WEBHOOKURL
           else
             curl -X POST -H 'Content-type: application/json' --data '{"content":" *Test cases* failed. \nCheck the logs for details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' $DISCORD_WEBHOOKURL
