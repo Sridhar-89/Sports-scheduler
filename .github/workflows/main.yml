@@ -30,7 +30,7 @@ jobs:
         env: 
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD:  ${{secrets.password_pg }}
-          POSTGRES_DB: wd-todo-test
+          POSTGRES_DB: wd-capstone-test
         options: >-    #Set health checks to wait until postgres has started
           --health-cmd pg_isready
           --health-interval 10s
