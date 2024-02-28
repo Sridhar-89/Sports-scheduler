@@ -14,7 +14,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2  
         with:
-          node-version: '14'
+          node-version: '20'
       - name: Installing dependencies  
         run: cd capstone && npm ci   #perform clean installation of all dependencies
       - name: Code linting and formatting
@@ -45,7 +45,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '20'
       - name: Install dependencies
         run: cd capstone && npm ci
       - name: Run tests
