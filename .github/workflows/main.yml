@@ -126,7 +126,7 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/sportsapp:development .
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/sportsapp:development ./capstone
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/sportsapp:development
     
             
