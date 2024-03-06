@@ -1,57 +1,202 @@
+# name: CICD Pipeline 
+# on:
+#   push:  #  it triggers the workflow  for every push
+#     branches:
+#       - main
+
+
+# jobs:
+#   code-validation:  
+#     runs-on: ubuntu-latest  # Containers must run in Linux based operating systems
+#     steps:
+#       - name: Checkout repository 
+#         uses: actions/checkout@v3    # Downloads a copy of the code in your repository 
+#       - name: Install Node.js
+#         uses: actions/setup-node@v2  
+#         with:
+#           node-version: '20'
+#       - name: Installing dependencies  
+#         run: cd capstone && npm ci   #perform clean installation of all dependencies
+#       - name: Code linting and formatting
+#         run: npx lint-staged
+        
+ 
+                    
+#   run_unit_tests: 
+#     runs-on: ubuntu-latest
+#     services:
+#       postgres:
+#         image: postgres:11.7
+#         env: 
+#           POSTGRES_USER: postgres
+#           POSTGRES_PASSWORD:  ${{secrets.password_pg }}
+#           POSTGRES_DB: wd-capstone-test
+#         options: >-    #Set health checks to wait until postgres has started
+#           --health-cmd pg_isready
+#           --health-interval 10s
+#           --health-timeout 5s
+#           --health-retries 5
+#         ports:
+#           - 5432:5432
+
+#     steps:
+#       - name: Check out repository code
+#         uses: actions/checkout@v2
+
+        
+#       - name: Install dependencies
+#         run: cd capstone && npm ci
+#       - name: Run tests
+#         run: cd capstone && npm test  
+#       - name: Run the app
+#         id: run-app
+#         run: |
+#           cd capstone
+#           npm install
+#           npx sequelize-cli db:drop
+#           npx sequelize-cli db:create
+#           npx sequelize-cli db:migrate
+#           PORT=3000 npm start &
+#           sleep 5
+
+
+
+#   deploy:
+#     runs-on: ubuntu-latest  
+#     needs: run_unit_tests
+#     steps:
+#       - name: Deploy to render 
+#         uses: johnbeynon/render-deploy-action@v0.0.8
+#         with:
+#           service-id: ${{ secrets.RENDER_SERVICEID}}  #render serviceid  provided by the Render
+#           api-key: ${{ secrets.API_TOKEN }}    #api key  provided by the Render
+
+
+
+#   codevalidation-notifications:
+#     name: Code validation Notification   # after the "code-validations" executed,  a notification  step will execute
+#     needs: code-validation 
+#     runs-on: ubuntu-latest
+#     if: ${{ always() }}
+#     steps:
+#       - name: Code validation notification for results
+#         env:
+#           DISCORD_WEBHOOKURL: ${{ secrets.DISCORD_WEBHOOKURL }}
+#         run: |
+#           if [[ ${{ needs.code-validation.result }} == 'success' ]]; then
+#             curl -X POST -H 'Content-type: application/json' --data '{"content":" *Code validation* completed   \nCheck the logs for details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' $DISCORD_WEBHOOKURL
+#           else
+#             curl -X POST -H 'Content-type: application/json' --data '{"content":" *Code validation* failed. \nCheck the logs for details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' $DISCORD_WEBHOOKURL
+#           fi  
+
+
+
+
+#   tests-notifications:
+#     name: Tests Notifications 
+#     needs: run_unit_tests
+#     runs-on: ubuntu-latest
+#     if: ${{ always() }} 
+#     steps:
+#       - name: Test completion notifications 
+#         env:
+#           DISCORD_WEBHOOKURL: ${{ secrets.DISCORD_WEBHOOKURL }}
+#         run: |
+#           if [[ ${{ needs.run_unit_tests.result }} == 'success' ]]; then
+#             curl -X POST -H 'Content-type: application/json' --data '{"content":" *Test cases* passed successfully. \nCheck the logs for details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' $DISCORD_WEBHOOKURL
+#           else
+#             curl -X POST -H 'Content-type: application/json' --data '{"content":" *Test cases* failed. \nCheck the logs for details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' $DISCORD_WEBHOOKURL
+#           fi
+
+
+  
+
+
+#   deploy-notifications:
+#     name: Deployment Notifications   
+#     needs: deploy
+#     runs-on: ubuntu-latest
+#     if: ${{ always() }} 
+#     steps:
+#       - name: Deployment results notifications
+#         env:
+#           DISCORD_WEBHOOKURL: ${{ secrets.DISCORD_WEBHOOKURL }}
+#         run: |
+#           if [[ ${{ needs.deploy.result }} == 'success' ]]; then
+#             curl -X POST -H 'Content-type: application/json' --data '{"content":" *Deployment of the application* completed successfully. \nCheck the logs for details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' $DISCORD_WEBHOOKURL
+#           else
+#             curl -X POST -H 'Content-type: application/json' --data '{"content":" *Deployment* failed. \nCheck the logs for details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' $DISCORD_WEBHOOKURL
+#           fi
+
+                 
 name: CICD Pipeline 
 on:
-  push:  #  it triggers the workflow  for every push
+  push:  # On every pushed code to the repository , it triggers the workflow
     branches:
       - main
 
 
 jobs:
-  code-validation:  
-    runs-on: ubuntu-latest  # Containers must run in Linux based operating systems
+  validation:  #code validation 
+    runs-on: ubuntu-latest #define the operating system
     steps:
       - name: Checkout repository 
-        uses: actions/checkout@v3    # Downloads a copy of the code in your repository 
+        uses: actions/checkout@v2   #downloads a copy of code
       - name: Install Node.js
-        uses: actions/setup-node@v2  
+        uses: actions/setup-node@v2  #for setting up nodeJS environment
         with:
-          node-version: '20'
-      - name: Installing dependencies  
-        run: cd capstone && npm ci   #perform clean installation of all dependencies
+          node-version: '14'
+      - name: Install dependencies  
+        run: npm ci   #perform clean installation of all dependencies  listed in package.json file
       - name: Code linting and formatting
-        run: npx lint-staged
+        run: npm run lint #run the command specified in scripts section of package.json to check for any errors or warnings
         
- 
-                    
-  run_unit_tests: 
+  notifications-codevalidation:
+    name: Code validation Notification   # a notification  step that will be executed after the "validations"
+    needs: validation 
     runs-on: ubuntu-latest
+    if: ${{ always() }}
+    steps:
+      - name: Code validation results on Discord
+        env:
+          DISCORD_WEBHOOKURL: ${{ secrets.DISCORD_WEBHOOKURL }}
+        run: |
+          if [[ ${{ needs.validation.result }} == 'success' ]]; then
+            curl -X POST -H 'Content-type: application/json' --data '{"content":" *Code validation* completed successfully  \nCheck the logs for details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' $DISCORD_WEBHOOKURL
+          else
+            curl -X POST -H 'Content-type: application/json' --data '{"content":" *Code validation* failed. \nCheck the logs for details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' $DISCORD_WEBHOOKURL
+          fi  
+                    
+  build_and_run_tests: 
+    runs-on: ubuntu-latest #specifies which runner to use for this job
     services:
       postgres:
         image: postgres:11.7
-        env: 
+        env: #environment variables for postgresql configuration
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD:  ${{secrets.password_pg }}
-          POSTGRES_DB: wd-capstone-test
-        options: >-    #Set health checks to wait until postgres has started
+          POSTGRES_PASSWORD:  ${{secrets.pg_password }}
+          POSTGRES_DB: voting_db
+        options: >-   #setting health checkups  for PostgreSQL service
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
         ports:
           - 5432:5432
-
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v2
-
-        
+        uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
       - name: Install dependencies
-        run: cd capstone && npm ci
+        run: npm ci
       - name: Run tests
-        run: cd capstone && npm test  
+        run: npm test   #command for running all unit  tests in the project
       - name: Run the app
         id: run-app
         run: |
-          cd capstone
           npm install
           npx sequelize-cli db:drop
           npx sequelize-cli db:create
@@ -59,63 +204,73 @@ jobs:
           PORT=3000 npm start &
           sleep 5
 
-
-
-  deploy:
-    runs-on: ubuntu-latest  
-    needs: run_unit_tests
-    steps:
-      - name: Deploy to render 
-        uses: johnbeynon/render-deploy-action@v0.0.8
-        with:
-          service-id: ${{ secrets.RENDER_SERVICEID}}  #render serviceid  provided by the Render
-          api-key: ${{ secrets.API_TOKEN }}    #api key  provided by the Render
-
-
-
-  codevalidation-notifications:
-    name: Code validation Notification   # after the "code-validations" executed,  a notification  step will execute
-    needs: code-validation 
-    runs-on: ubuntu-latest
-    if: ${{ always() }}
-    steps:
-      - name: Code validation notification for results
-        env:
-          DISCORD_WEBHOOKURL: ${{ secrets.DISCORD_WEBHOOKURL }}
-        run: |
-          if [[ ${{ needs.code-validation.result }} == 'success' ]]; then
-            curl -X POST -H 'Content-type: application/json' --data '{"content":" *Code validation* completed   \nCheck the logs for details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' $DISCORD_WEBHOOKURL
-          else
-            curl -X POST -H 'Content-type: application/json' --data '{"content":" *Code validation* failed. \nCheck the logs for details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' $DISCORD_WEBHOOKURL
-          fi  
-
-
-
-
-  tests-notifications:
-    name: Tests Notifications 
-    needs: run_unit_tests
+  test-notifications:
+    name: Test Notifications  #notifications after  completion of a unit tests
+    needs: build_and_run_tests
     runs-on: ubuntu-latest
     if: ${{ always() }} 
     steps:
-      - name: Test completion notifications 
+      - name: Test results notifications on Discord 
         env:
           DISCORD_WEBHOOKURL: ${{ secrets.DISCORD_WEBHOOKURL }}
         run: |
-          if [[ ${{ needs.run_unit_tests.result }} == 'success' ]]; then
+          if [[ ${{ needs.build_and_run_tests.result }} == 'success' ]]; then
             curl -X POST -H 'Content-type: application/json' --data '{"content":" *Test cases* passed successfully. \nCheck the logs for details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' $DISCORD_WEBHOOKURL
           else
             curl -X POST -H 'Content-type: application/json' --data '{"content":" *Test cases* failed. \nCheck the logs for details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' $DISCORD_WEBHOOKURL
           fi
 
+  docker:
+    runs-on: ubuntu-latest #specifies which runner to use for this job
+    needs: build_and_run_tests
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-  deploy-notifications:
-    name: Deployment Notifications   
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/onlinevotingapp:latest .
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/onlinevotingapp:latest
+    
+
+  docker-notifications:
+    name: docker Notifications   #notification for docker build results
     needs: deploy
     runs-on: ubuntu-latest
     if: ${{ always() }} 
     steps:
-      - name: Deployment results notifications
+      - name: docker build results notifications on Discord
+        env:
+          DISCORD_WEBHOOKURL: ${{ secrets.DISCORD_WEBHOOKURL }}
+        run: |
+          if [[ ${{ needs.docker.result }} == 'success' ]]; then
+            curl -X POST -H 'Content-type: application/json' --data '{"content":" *docker build of the application* completed successfully. \nCheck the logs for details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' $DISCORD_WEBHOOKURL
+          else
+            curl -X POST -H 'Content-type: application/json' --data '{"content":" *docker build* failed. \nCheck the logs for details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' $DISCORD_WEBHOOKURL
+          fi
+        
+
+
+  deploy:
+    runs-on: ubuntu-latest  
+    needs: build_and_run_tests
+    steps:
+      - name: Deploy to render 
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.RENDER_SERVICEID}}  #render serviceid  provided by Render
+          api-key: ${{ secrets.API_TOKEN }}    #api key  provided by Render
+
+  deploy-notifications:
+    name: Deployment Notifications   #notification for deployment results
+    needs: deploy
+    runs-on: ubuntu-latest
+    if: ${{ always() }} 
+    steps:
+      - name: Deployment results notifications on Discord
         env:
           DISCORD_WEBHOOKURL: ${{ secrets.DISCORD_WEBHOOKURL }}
         run: |
