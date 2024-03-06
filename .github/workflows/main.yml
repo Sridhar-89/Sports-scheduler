@@ -126,8 +126,8 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/onlinevotingapp:latest .
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/onlinevotingapp:latest
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/sports-app:development.
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/sports-app:development
     
             
         
