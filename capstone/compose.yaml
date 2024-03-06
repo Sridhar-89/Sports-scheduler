@@ -33,8 +33,6 @@ services:
       context: .
       target: dev
     image: sports-app:development
-    volumes:
-      - ./capstone:/app
     ports:
       - 5000:5000
     env_file:
