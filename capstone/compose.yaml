@@ -1,0 +1,64 @@
+# version: '3.8'
+# services:
+#   app:
+#     build:
+#       context: .
+#       target: dev
+#     image: sports-app:development 
+#     ports:
+#       - 5000:5000
+#     env_file:
+#       - .env
+#     depends_on:
+#       - db
+#   db:
+#     image: postgres:15
+#     volumes:
+#       - pg-prod-data:/var/lib/postgresql/data
+#     env_file:
+#       - .env
+#     environment:
+#       POSTGRES_USER: $DEV_USERNAME
+#       POSTGRES_DB: $DEV_DATABASE
+#       POSTGRES_PASSWORD: $DEV_PASSWORD
+# volumes:
+#   pg-prod-data:
+
+
+
+version: "3.8"
+services:
+  app:
+    build:
+      context: .
+      target: dev
+    image: sports-app:development
+    volumes:
+      - ./capstone:/app
+    ports:
+      - 5000:5000
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    volumes:
+      - pg-dev-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DEV_USERNAME}
+      POSTGRES_DB: ${DEV_DATABASE}
+      POSTGRES_PASSWORD: ${DEV_PASSWORD}
+    ports:
+      - 5435:5432
+    expose:
+      - "5435"
+      
+
+volumes:
+  pg-dev-data:
