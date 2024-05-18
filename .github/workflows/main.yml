@@ -1,6 +1,6 @@
 name: CICD Pipeline 
 on:
-  push:  #  it triggers the workflow  for every push
+  push:  #  it triggers the workflow  for every pushes
     branches:
       - main
 
