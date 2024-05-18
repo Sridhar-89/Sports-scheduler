@@ -1,14 +1,51 @@
+<<<<<<< HEAD
 version: '3.8'
+=======
+# version: '3.8'
+# services:
+#   app:
+#     build:
+#       context: .
+#       target: dev
+#     image: sports-app:development 
+#     ports:
+#       - 5000:5000
+#     env_file:
+#       - .env
+#     depends_on:
+#       - db
+#   db:
+#     image: postgres:15
+#     volumes:
+#       - pg-prod-data:/var/lib/postgresql/data
+#     env_file:
+#       - .env
+#     environment:
+#       POSTGRES_USER: $DEV_USERNAME
+#       POSTGRES_DB: $DEV_DATABASE
+#       POSTGRES_PASSWORD: $DEV_PASSWORD
+# volumes:
+#   pg-prod-data:
+
+
+
+version: "3.8"
+>>>>>>> f34b7c602f93000cd46b4ac8c582f2ed77816145
 services:
   app:
     build:
       context: .
       target: dev
+<<<<<<< HEAD
     image: sports-app:development 
+=======
+    image: sports-app:development
+>>>>>>> f34b7c602f93000cd46b4ac8c582f2ed77816145
     ports:
       - 5000:5000
     env_file:
       - .env
+<<<<<<< HEAD
     depends_on:
       - db
   db:
@@ -21,9 +58,33 @@ services:
       POSTGRES_USER: $DEV_USERNAME
       POSTGRES_DB: $DEV_DATABASE
       POSTGRES_PASSWORD: $DEV_PASSWORD
+=======
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    volumes:
+      - pg-dev-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DEV_USERNAME}
+      POSTGRES_DB: ${DEV_DATABASE}
+      POSTGRES_PASSWORD: ${DEV_PASSWORD}
+>>>>>>> f34b7c602f93000cd46b4ac8c582f2ed77816145
     ports:
       - 5435:5432
     expose:
       - "5435"
+<<<<<<< HEAD
 volumes:
   pg-prod-data:
+=======
+      
+
+volumes:
+  pg-dev-data:
+>>>>>>> f34b7c602f93000cd46b4ac8c582f2ed77816145
